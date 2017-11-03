@@ -58,8 +58,13 @@ public class Display extends JFrame {
     JLabel label;
     JTextField tf;
     JButton button;
+    JButton compile;
 
     public Display() {
+    	
+    	DraggerForTextField draggerForTextField = null;
+    	DraggerForButton draggerForButton = null;
+    	Dragger dragger = null;
 
     	Font font = new Font(null, 0, 20);
     	
@@ -75,7 +80,7 @@ public class Display extends JFrame {
         tf.setBounds(10, 50, 300, 30);
         tf.setFont(font);
         
-        DraggerForTextField draggerForTextField = new DraggerForTextField(tf);
+        draggerForTextField = new DraggerForTextField(tf, dragger, draggerForButton);
         tf.addMouseListener(draggerForTextField);
         tf.addMouseMotionListener(draggerForTextField);
         
@@ -83,16 +88,20 @@ public class Display extends JFrame {
         button.setBounds(10, 90, 300, 30);
         button.setFont(font);
         
-        DraggerForButton draggerForButton = new DraggerForButton(button);
+        draggerForButton = new DraggerForButton(button, dragger, draggerForTextField);
         
         button.addMouseListener(draggerForButton);
         button.addMouseMotionListener(draggerForButton);
         
+        compile = new JButton("Compile");
+        compile.setBounds(700, 750, 200, 30);
+        
         panel.add(label);
         panel.add(tf);
         panel.add(button);
+        panel.add(compile);
 
-        Dragger dragger = new Dragger(label, draggerForTextField, draggerForButton);
+        dragger = new Dragger(label, draggerForTextField, draggerForButton);
         
         panel.addMouseListener(dragger);
         panel.addMouseMotionListener(dragger);
@@ -142,6 +151,15 @@ public class Display extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
+        
+        dragger.setDraggerForButton(draggerForButton);
+        dragger.setDraggerForTextField(draggerForTextField);
+        
+        draggerForTextField.setDragger(dragger);
+        draggerForTextField.setDraggerForButton(draggerForButton);
+        
+        draggerForButton.setDragger(dragger);
+        draggerForButton.setDraggerForTextField(draggerForTextField);
     }
 }
 

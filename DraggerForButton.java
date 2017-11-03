@@ -13,10 +13,18 @@ public class DraggerForButton extends MouseAdapter{
 	private JButton button;
 	private Component component; 
 	private Font font = new Font(null, 0, 20);
+	private int origX;
+	private int origY;
+	private int origXComponent;
+	private int origYComponent;
+	private Dragger dragger;
+	private DraggerForTextField draggerForTextField;
 	
-	public DraggerForButton(JButton button) {
+	public DraggerForButton(JButton button, Dragger dragger, DraggerForTextField draggerForTextField) {
 		// TODO Auto-generated constructor stub
 		this.button = button;
+		this.dragger = dragger;
+		this.draggerForTextField = draggerForTextField;;
 	}
 	
 	public void mouseClicked(MouseEvent e) {
@@ -25,12 +33,30 @@ public class DraggerForButton extends MouseAdapter{
 			((JComponent) component).setBorder(BorderFactory.createLineBorder(Color.black));
 			
 		}
+		
+		if(dragger.getComponent() != null){
+			((JComponent) dragger.getComponent()).setBorder(null);
+			dragger.setComponent(null);
+		}
+		
+		if(draggerForTextField.getComponent() != null){
+			((JComponent) draggerForTextField.getComponent()).setBorder(BorderFactory.createLineBorder(Color.black));
+			draggerForTextField.setComponent(null);
+		}
+		
 		component = e.getComponent();
 		((JComponent) component).setBorder(BorderFactory.createLineBorder(Color.red));
-	    System.out.println(component);
 	    
 	}	
 	
+	public void setDragger(Dragger dragger) {
+		this.dragger = dragger;
+	}
+
+	public void setDraggerForTextField(DraggerForTextField draggerForTextField) {
+		this.draggerForTextField = draggerForTextField;
+	}
+
 	public Component getComponent() {
 		return component;
 	}
@@ -49,11 +75,17 @@ public class DraggerForButton extends MouseAdapter{
 		else{
 			component = e.getComponent();
 		}
+
+		origX = e.getXOnScreen();
+		origY = e.getYOnScreen();
+		origXComponent = e.getComponent().getX();
+		origYComponent = e.getComponent().getY();
+		
 	}
 	
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		component.setBounds(e.getX(), e.getY(), component.getWidth(), component.getHeight());
+		component.setBounds(e.getXOnScreen() - origX + origXComponent ,e.getYOnScreen() - origY + origYComponent, component.getWidth(), component.getHeight());
         e.getComponent().repaint();
         
 	}

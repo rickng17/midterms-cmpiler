@@ -14,7 +14,7 @@ public class Dragger extends MouseAdapter{
 	private Component component; 
 	private Font font = new Font(null, 0, 20);
 	private DraggerForTextField draggerForTextField;
-	private DraggerForButton draggerForButton; 
+	private DraggerForButton draggerForButton;
 	
 	public Dragger(JLabel jlabel, DraggerForTextField draggerForTextField, DraggerForButton draggerForButton) {
 		// TODO Auto-generated constructor stub
@@ -30,6 +30,16 @@ public class Dragger extends MouseAdapter{
 			((JComponent) component).setBorder(null);
 		}
 		
+		if(draggerForTextField.getComponent() != null){
+			((JComponent) draggerForTextField.getComponent()).setBorder(BorderFactory.createLineBorder(Color.black));
+			draggerForTextField.setComponent(null);
+		}
+		
+		if(draggerForButton.getComponent() != null){
+			((JComponent) draggerForButton.getComponent()).setBorder(BorderFactory.createLineBorder(Color.black));
+			draggerForButton.setComponent(null);
+		}
+		
 		 Container container = (Container) e.getComponent();
 	        for (Component c : container.getComponents()) {
 	            if (c.getBounds().contains(e.getPoint())) {
@@ -39,6 +49,14 @@ public class Dragger extends MouseAdapter{
 	        }
 	}	
 	
+	public void setDraggerForTextField(DraggerForTextField draggerForTextField) {
+		this.draggerForTextField = draggerForTextField;
+	}
+
+	public void setDraggerForButton(DraggerForButton draggerForButton) {
+		this.draggerForButton = draggerForButton;
+	}
+
 	@Override
     public void mousePressed(MouseEvent e) {
         Container container = (Container) e.getComponent();
@@ -56,7 +74,6 @@ public class Dragger extends MouseAdapter{
             	}
                 
                 
-                System.out.println(c);
                 break;
             }
         }
@@ -72,7 +89,6 @@ public class Dragger extends MouseAdapter{
         	component.setBounds(e.getX(), e.getY(), component.getWidth(), component.getHeight());
             e.getComponent().repaint();
         }
-        System.out.println(component);
     }
 	 
 	 @Override
@@ -84,4 +100,8 @@ public class Dragger extends MouseAdapter{
 		 draggerForTextField.setComponent(null);
 		 draggerForButton.setComponent(null);
     }
+
+	public void setComponent(Component component) {
+		this.component = component;
+	}
 }
