@@ -35,7 +35,7 @@ public class Display extends JFrame {
 
         setTitle("Midterms CMPILER");
         panel = new JPanel();
-        panel.setBounds(0, 0, 800, 600);
+        panel.setBounds(0, 0, 960, 540);
 
         label = new JLabel("Drag this to create a label");
         label.setBounds(10, 10, 300, 30);
@@ -59,7 +59,7 @@ public class Display extends JFrame {
         button.addMouseMotionListener(draggerForButton);
 
         compile = new JButton("Compile");
-        compile.setBounds(500, 500, 200, 30);
+        compile.setBounds(0, 541,943, 30);
         compile.addActionListener(e -> {
             export();
         });
@@ -100,7 +100,7 @@ public class Display extends JFrame {
         changeButton.addActionListener(listener);
 
         changePanel = new JPanel();
-        changePanel.setBounds(800, 0, 200, 600);
+        changePanel.setBounds(800, 0, 200, 400);
         changePanel.add(changeWidthLabel);
         changePanel.add(tfwidth);
         changePanel.add(changeHeightLabel);
@@ -111,7 +111,8 @@ public class Display extends JFrame {
 
         add(changePanel);
         add(panel);
-        setSize(800, 600);
+        add(compile);
+        setSize(960, 612);
 
         panel.setLayout(null);
         //pack();
@@ -146,19 +147,25 @@ public class Display extends JFrame {
                 labels.add("\t\t\t{\"text\": \"" + jl.getText() + "\", " +
                         "\"font\": \"" + jl.getFont().getFamily() + "\", " +
                         "\"xposition\": \"" + jl.getX() + "\", " +
-                        "\"yposition\": \"" + jl.getY() + "\"},");
+                        "\"yposition\": \"" + jl.getY() + "\"" +
+                        "\"width\": \"" + jl.getWidth() +
+                        "\"height\": \"" + jl.getHeight() + "\"},");
             } else if (o instanceof JButton) {
                 JButton jb = (JButton) o;
                 buttons.add("\t\t\t{\"text\": \"" + jb.getText() + "\", " +
                         "\"font\": \"" + jb.getFont().getFamily() + "\", " +
                         "\"xposition\": \"" + jb.getX() + "\", " +
-                        "\"yposition\": \"" + jb.getY() + "\"},");
+                        "\"yposition\": \"" + jb.getY() +
+                        "\"width\": \"" + jb.getWidth() +
+                        "\"height\": \"" + jb.getHeight() + "\"},");
             } else if (o instanceof JTextField) {
                 JTextField jt = (JTextField) o;
                 textFields.add("\t\t\t{\"text\": \"" + jt.getText() + "\", " +
                         "\"font\": \"" + jt.getFont().getFamily() + "\", " +
                         "\"xposition\": \"" + jt.getX() + "\", " +
-                        "\"yposition\": \"" + jt.getY() + "\"},");
+                        "\"yposition\": \"" + jt.getY() +
+                        "\"width\": \"" + jt.getWidth() +
+                        "\"height\": \"" + jt.getHeight() + "\"},");
             }
         }
         String s = labels.get(labels.size() - 1);
