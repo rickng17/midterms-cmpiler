@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -17,12 +18,15 @@ public class Display extends JFrame {
     private JTextField tfwidth;
     private JLabel changeHeightLabel;
     private JTextField tfheight;
+    private JLabel changeTextLabel;
+    private JTextField tfText;
     private JButton changeButton;
     private JLabel label;
     private JTextField tf;
     private JButton button;
     private JButton compile;
     private ArrayList<Object> objects;
+    private JButton load;
 
     public Display() {
 
@@ -59,7 +63,8 @@ public class Display extends JFrame {
         button.addMouseMotionListener(draggerForButton);
 
         compile = new JButton("Compile");
-        compile.setBounds(0, 541, 943, 30);
+        compile.setBounds(0, 540, 1160, 30);
+        compile.setFont(font);
         compile.addActionListener(e -> {
             export();
         });
@@ -67,7 +72,7 @@ public class Display extends JFrame {
         panel.add(label);
         panel.add(tf);
         panel.add(button);
-        panel.add(compile);
+       
 
         dragger = new Dragger(label, draggerForTextField, draggerForButton, objects);
 
@@ -82,6 +87,10 @@ public class Display extends JFrame {
         changeHeightLabel = new JLabel("Change Height:");
         changeHeightLabel.setBounds(0, 100, 200, 30);
         changeHeightLabel.setFont(font);
+        
+        changeTextLabel = new JLabel("Change Text:");
+        changeTextLabel.setBounds(0, 180, 200, 30);
+        changeTextLabel.setFont(font);
 
         tfwidth = new JTextField();
         tfwidth.setBounds(0, 50, 100, 30);
@@ -90,29 +99,44 @@ public class Display extends JFrame {
         tfheight = new JTextField();
         tfheight.setBounds(0, 130, 100, 30);
         tfheight.setFont(font);
+        
+        tfText = new JTextField();
+        tfText.setBounds(0, 210, 100, 30);
+        tfText.setFont(font);
 
-        changeButton = new JButton("Change Size");
-        changeButton.setBounds(0, 200, 150, 30);
+        changeButton = new JButton("Change");
+        changeButton.setBounds(0, 250, 150, 30);
         changeButton.setFont(font);
+        
+        load = new JButton("load Json file");
+        load.setBounds(0, 350, 150, 30);
+        load.setFont(font);
+        load.addActionListener(e -> {
+        	loadJson();
+        });
+        
 
-        MyActionListener listener = new MyActionListener(dragger, draggerForTextField, draggerForButton, tfwidth, tfheight);
+        MyActionListener listener = new MyActionListener(dragger, draggerForTextField, draggerForButton, tfwidth, tfheight, tfText);
 
         changeButton.addActionListener(listener);
 
         changePanel = new JPanel();
-        changePanel.setBounds(800, 0, 200, 400);
+        changePanel.setBounds(960, 0, 200, 540);
         changePanel.add(changeWidthLabel);
         changePanel.add(tfwidth);
         changePanel.add(changeHeightLabel);
         changePanel.add(tfheight);
+        changePanel.add(changeTextLabel);
+        changePanel.add(tfText);
         changePanel.add(changeButton);
+        changePanel.add(load);
 
         changePanel.setLayout(null);
 
         add(changePanel);
         add(panel);
         add(compile);
-        setSize(960, 612);
+        setSize(1160, 610);
 
         panel.setLayout(null);
         //pack();
@@ -120,6 +144,7 @@ public class Display extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
+        setResizable(false);
 
         dragger.setDraggerForButton(draggerForButton);
         dragger.setDraggerForTextField(draggerForTextField);
@@ -198,6 +223,17 @@ public class Display extends JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public void loadJson(){
+    	JFileChooser fileChooser = new JFileChooser();
+    	fileChooser.setDialogTitle("Load Json file");
+    	
+    	 int returnValue = fileChooser.showOpenDialog(null);
+         if (returnValue == JFileChooser.APPROVE_OPTION) {
+           File selectedFile = fileChooser.getSelectedFile();
+           System.out.println(selectedFile.getName());
+         }
     }
 }
 

@@ -62,6 +62,7 @@ public class Dragger extends MouseAdapter {
 
     @Override
     public void mousePressed(MouseEvent e) {
+    	System.out.println(e.getY());
         Container container = (Container) e.getComponent();
         for (Component c : container.getComponents()) {
             if (c.getBounds().contains(e.getPoint())) {

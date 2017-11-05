@@ -2,6 +2,9 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 public class MyActionListener implements ActionListener{
@@ -11,14 +14,16 @@ public class MyActionListener implements ActionListener{
 	private DraggerForButton draggerForButton;
 	private JTextField width;
 	private JTextField height;
+	private JTextField text;
 	
-	public MyActionListener(Dragger dragger, DraggerForTextField draggerForTextField, DraggerForButton draggerForButton, JTextField width, JTextField height) {
+	public MyActionListener(Dragger dragger, DraggerForTextField draggerForTextField, DraggerForButton draggerForButton, JTextField width, JTextField height, JTextField text) {
 		// TODO Auto-generated constructor stub
 		this.dragger = dragger;
 		this.draggerForTextField = draggerForTextField;
 		this.draggerForButton = draggerForButton;
 		this.width = width;
 		this.height = height;
+		this.text = text;
 	}
 	
 	@Override
@@ -35,6 +40,19 @@ public class MyActionListener implements ActionListener{
 		}
 		try{
 		c.setBounds(c.getX(), c.getY(), Integer.parseInt(width.getText()), Integer.parseInt(height.getText()));
+		}catch(Exception exception){
+			
+		}
+		try{
+			if(c instanceof JLabel){
+				((JLabel) c).setText(text.getText());
+			}
+			else if(c instanceof JTextField){
+				((JTextField) c).setText(text.getText());
+			}
+			else if(c instanceof JButton){System.out.println("l");
+				((JButton) c).setText(text.getText());
+			}
 		}catch(Exception exception){
 			
 		}
