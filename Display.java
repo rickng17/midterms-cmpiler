@@ -59,7 +59,7 @@ public class Display extends JFrame {
         button.addMouseMotionListener(draggerForButton);
 
         compile = new JButton("Compile");
-        compile.setBounds(0, 541,943, 30);
+        compile.setBounds(0, 541, 943, 30);
         compile.addActionListener(e -> {
             export();
         });
@@ -147,36 +147,43 @@ public class Display extends JFrame {
                 labels.add("\t\t\t{\"text\": \"" + jl.getText() + "\", " +
                         "\"font\": \"" + jl.getFont().getFamily() + "\", " +
                         "\"xposition\": \"" + jl.getX() + "\", " +
-                        "\"yposition\": \"" + jl.getY() + "\"" +
-                        "\"width\": \"" + jl.getWidth() +
+                        "\"yposition\": \"" + jl.getY() + "\", " +
+                        "\"width\": \"" + jl.getWidth() + "\", " +
                         "\"height\": \"" + jl.getHeight() + "\"},");
             } else if (o instanceof JButton) {
                 JButton jb = (JButton) o;
                 buttons.add("\t\t\t{\"text\": \"" + jb.getText() + "\", " +
                         "\"font\": \"" + jb.getFont().getFamily() + "\", " +
                         "\"xposition\": \"" + jb.getX() + "\", " +
-                        "\"yposition\": \"" + jb.getY() +
-                        "\"width\": \"" + jb.getWidth() +
+                        "\"yposition\": \"" + jb.getY() + "\", " +
+                        "\"width\": \"" + jb.getWidth() + "\", " +
                         "\"height\": \"" + jb.getHeight() + "\"},");
             } else if (o instanceof JTextField) {
                 JTextField jt = (JTextField) o;
                 textFields.add("\t\t\t{\"text\": \"" + jt.getText() + "\", " +
                         "\"font\": \"" + jt.getFont().getFamily() + "\", " +
                         "\"xposition\": \"" + jt.getX() + "\", " +
-                        "\"yposition\": \"" + jt.getY() +
-                        "\"width\": \"" + jt.getWidth() +
+                        "\"yposition\": \"" + jt.getY() + "\", " +
+                        "\"width\": \"" + jt.getWidth() + "\", " +
                         "\"height\": \"" + jt.getHeight() + "\"},");
             }
         }
-        String s = labels.get(labels.size() - 1);
-        labels.remove(s);
-        labels.add(s.substring(0, s.length() - 1));
-        s = buttons.get(buttons.size() - 1);
-        buttons.remove(s);
-        buttons.add(s.substring(0, s.length() - 1));
-        s = textFields.get(textFields.size() - 1);
-        textFields.remove(s);
-        textFields.add(s.substring(0, s.length() - 1));
+        String s;
+        if (labels.size() > 3) {
+            s = labels.get(labels.size() - 1);
+            labels.remove(s);
+            labels.add(s.substring(0, s.length() - 1));
+        }
+        if (buttons.size() > 1) {
+            s = buttons.get(buttons.size() - 1);
+            buttons.remove(s);
+            buttons.add(s.substring(0, s.length() - 1));
+        }
+        if (textFields.size() > 1) {
+            s = textFields.get(textFields.size() - 1);
+            textFields.remove(s);
+            textFields.add(s.substring(0, s.length() - 1));
+        }
         labels.add("\t\t],");
         buttons.add("\t\t],");
         textFields.add("\t\t]");
