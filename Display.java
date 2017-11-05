@@ -1,4 +1,10 @@
 import javax.swing.*;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +33,7 @@ public class Display extends JFrame {
     private JButton compile;
     private ArrayList<Object> objects;
     private JButton load;
+    private Font font;
 
     public Display() {
 
@@ -35,7 +42,7 @@ public class Display extends JFrame {
         Dragger dragger = null;
         objects = new ArrayList<>();
 
-        Font font = new Font(null, 0, 20);
+        font = new Font(null, 0, 20);
 
         setTitle("Midterms CMPILER");
         panel = new JPanel();
@@ -67,6 +74,7 @@ public class Display extends JFrame {
         compile.setFont(font);
         compile.addActionListener(e -> {
             export();
+            JOptionPane.showMessageDialog(new JFrame(), "Compile Finished");
         });
 
         panel.add(label);
@@ -105,11 +113,11 @@ public class Display extends JFrame {
         tfText.setFont(font);
 
         changeButton = new JButton("Change");
-        changeButton.setBounds(0, 250, 150, 30);
+        changeButton.setBounds(0, 300, 150, 30);
         changeButton.setFont(font);
         
         load = new JButton("load Json file");
-        load.setBounds(0, 350, 150, 30);
+        load.setBounds(0, 400, 150, 30);
         load.setFont(font);
         load.addActionListener(e -> {
         	loadJson();
@@ -170,27 +178,27 @@ public class Display extends JFrame {
             if (o instanceof JLabel) {
                 JLabel jl = (JLabel) o;
                 labels.add("\t\t\t{\"text\": \"" + jl.getText() + "\", " +
-                        "\"font\": \"" + jl.getFont().getFamily() + "\", " +
-                        "\"xposition\": \"" + jl.getX() + "\", " +
-                        "\"yposition\": \"" + jl.getY() + "\", " +
-                        "\"width\": \"" + jl.getWidth() + "\", " +
-                        "\"height\": \"" + jl.getHeight() + "\"},");
+                        "\"font\": " + jl.getFont().getFamily() + ", " +
+                        "\"xposition\": " + jl.getX() + ", " +
+                        "\"yposition\": " + jl.getY() + ", " +
+                        "\"width\": " + jl.getWidth() + ", " +
+                        "\"height\": " + jl.getHeight() + "},");
             } else if (o instanceof JButton) {
                 JButton jb = (JButton) o;
                 buttons.add("\t\t\t{\"text\": \"" + jb.getText() + "\", " +
-                        "\"font\": \"" + jb.getFont().getFamily() + "\", " +
-                        "\"xposition\": \"" + jb.getX() + "\", " +
-                        "\"yposition\": \"" + jb.getY() + "\", " +
-                        "\"width\": \"" + jb.getWidth() + "\", " +
-                        "\"height\": \"" + jb.getHeight() + "\"},");
+                        "\"font\": " + jb.getFont().getFamily() + ", " +
+                        "\"xposition\": " + jb.getX() + ", " +
+                        "\"yposition\": " + jb.getY() + ", " +
+                        "\"width\": " + jb.getWidth() + ", " +
+                        "\"height\": " + jb.getHeight() + "},");
             } else if (o instanceof JTextField) {
                 JTextField jt = (JTextField) o;
                 textFields.add("\t\t\t{\"text\": \"" + jt.getText() + "\", " +
-                        "\"font\": \"" + jt.getFont().getFamily() + "\", " +
-                        "\"xposition\": \"" + jt.getX() + "\", " +
-                        "\"yposition\": \"" + jt.getY() + "\", " +
-                        "\"width\": \"" + jt.getWidth() + "\", " +
-                        "\"height\": \"" + jt.getHeight() + "\"},");
+                        "\"font\": " + jt.getFont().getFamily() + ", " +
+                        "\"xposition\": " + jt.getX() + ", " +
+                        "\"yposition\": " + jt.getY() + ", " +
+                        "\"width\": " + jt.getWidth() + ", " +
+                        "\"height\": " + jt.getHeight() + "},");
             }
         }
         String s;
@@ -228,12 +236,101 @@ public class Display extends JFrame {
     public void loadJson(){
     	JFileChooser fileChooser = new JFileChooser();
     	fileChooser.setDialogTitle("Load Json file");
+    	File workingDirectory = new File(System.getProperty("user.dir"));
+    	fileChooser.setCurrentDirectory(workingDirectory);
     	
     	 int returnValue = fileChooser.showOpenDialog(null);
          if (returnValue == JFileChooser.APPROVE_OPTION) {
            File selectedFile = fileChooser.getSelectedFile();
-           System.out.println(selectedFile.getName());
+           String jsonString = readAllBytes(selectedFile.getPath());
+           
+           JsonToUI(jsonString);
          }
+    }
+    
+    private void JsonToUI(String jsonString){
+    	JsonElement jelement = new JsonParser().parse(jsonString);
+        JsonObject  jobject = jelement.getAsJsonObject();
+        jobject = jobject.getAsJsonObject("webpage");
+        
+        JsonArray jarray = jobject.getAsJsonArray("labels");
+        if(jarray != null){
+	        for(int i = 0; i < jarray.size(); i++){
+	        	jobject = jarray.get(i).getAsJsonObject();
+	            String text = jobject.get("text").toString();
+	            text = text.substring(1,text.length()-1);
+	            String x = jobject.get("xposition").toString();
+	            String y = jobject.get("yposition").toString();
+	            String width = jobject.get("width").toString();
+	            String height = jobject.get("height").toString();
+	            
+	            JLabel label = new JLabel(text); 
+	            label.setBounds(Integer.parseInt(x), Integer.parseInt(y), Integer.parseInt(width), Integer.parseInt(height));
+	            panel.add(label);
+	            label.setFont(font);
+	            objects.add(label);
+	        }
+        }
+        
+        jobject = jelement.getAsJsonObject();
+        jobject = jobject.getAsJsonObject("webpage");
+        
+        jarray = jobject.getAsJsonArray("buttons");
+        
+        if(jarray != null){
+	        for(int i = 0; i < jarray.size(); i++){
+	        	jobject = jarray.get(i).getAsJsonObject();
+	            String text = jobject.get("text").toString();
+	            text = text.substring(1,text.length()-1);
+	            String x = jobject.get("xposition").toString();
+	            String y = jobject.get("yposition").toString();
+	            String width = jobject.get("width").toString();
+	            String height = jobject.get("height").toString();
+	            
+	            JButton button = new JButton(text); 
+	            button.setBounds(Integer.parseInt(x), Integer.parseInt(y), Integer.parseInt(width), Integer.parseInt(height));
+	            panel.add(button);
+	            button.setFont(font);
+	            objects.add(button);
+	        }
+        }
+        
+        jobject = jelement.getAsJsonObject();
+        jobject = jobject.getAsJsonObject("webpage");
+        
+        jarray = jobject.getAsJsonArray("textfields");
+        
+        if(jarray != null){
+	        for(int i = 0; i < jarray.size(); i++){
+	        	jobject = jarray.get(i).getAsJsonObject();
+	            String text = jobject.get("text").toString();
+	            text = text.substring(1,text.length()-1);
+	            String x = jobject.get("xposition").toString();
+	            String y = jobject.get("yposition").toString();
+	            String width = jobject.get("width").toString();
+	            String height = jobject.get("height").toString();
+	            
+	            JTextField tf = new JTextField(text); 
+	            tf.setBounds(Integer.parseInt(x), Integer.parseInt(y), Integer.parseInt(width), Integer.parseInt(height));
+	            panel.add(tf);
+	            tf.setFont(font);
+	            objects.add(tf);
+	        }
+        }
+    }
+    
+    private static String readAllBytes(String filePath)
+    {
+        String content = "";
+        try
+        {
+            content = new String ( Files.readAllBytes( Paths.get(filePath) ) );
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return content;
     }
 }
 
