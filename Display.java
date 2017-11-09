@@ -34,12 +34,15 @@ public class Display extends JFrame {
     private ArrayList<Object> objects;
     private JButton load;
     private Font font;
+    private JButton clear;
+    
+    private DraggerForTextField draggerForTextField = null;
+    private DraggerForButton draggerForButton = null;
+    private Dragger dragger = null;
 
     public Display() {
 
-        DraggerForTextField draggerForTextField = null;
-        DraggerForButton draggerForButton = null;
-        Dragger dragger = null;
+        
         objects = new ArrayList<>();
 
         font = new Font(null, 0, 20);
@@ -122,6 +125,13 @@ public class Display extends JFrame {
         load.addActionListener(e -> {
             loadJson();
         });
+        
+        clear = new JButton("clear");
+        clear.setBounds(0, 350, 150, 30);
+        clear.setFont(font);
+        clear.addActionListener(e ->{
+        	clear();
+        });
 
 
         MyActionListener listener = new MyActionListener(dragger, draggerForTextField, draggerForButton, tfwidth, tfheight, tfText);
@@ -138,6 +148,7 @@ public class Display extends JFrame {
         changePanel.add(tfText);
         changePanel.add(changeButton);
         changePanel.add(load);
+        changePanel.add(clear);
 
         changePanel.setLayout(null);
 
@@ -267,12 +278,15 @@ public class Display extends JFrame {
                 String y = jobject.get("yposition").toString();
                 String width = jobject.get("width").toString();
                 String height = jobject.get("height").toString();
+                String layer = jobject.get("layer").toString();
 
-                JLabel label = new JLabel(text);
-                label.setBounds(Integer.parseInt(x), Integer.parseInt(y), Integer.parseInt(width), Integer.parseInt(height));
-                panel.add(label);
-                label.setFont(font);
-                objects.add(label);
+                JLabel newLabel = new JLabel(text);
+                newLabel.setBounds(Integer.parseInt(x), Integer.parseInt(y), Integer.parseInt(width), Integer.parseInt(height));
+                panel.add(newLabel);
+                newLabel.setFont(font);
+                panel.setComponentZOrder(newLabel, Integer.parseInt(layer));
+                
+                objects.add(newLabel);
             }
         }
 
@@ -290,12 +304,18 @@ public class Display extends JFrame {
                 String y = jobject.get("yposition").toString();
                 String width = jobject.get("width").toString();
                 String height = jobject.get("height").toString();
+                String layer = jobject.get("layer").toString();
 
-                JButton button = new JButton(text);
-                button.setBounds(Integer.parseInt(x), Integer.parseInt(y), Integer.parseInt(width), Integer.parseInt(height));
-                panel.add(button);
-                button.setFont(font);
-                objects.add(button);
+                JButton newButton = new JButton(text);
+                newButton.setBounds(Integer.parseInt(x), Integer.parseInt(y), Integer.parseInt(width), Integer.parseInt(height));
+                panel.add(newButton);
+                newButton.setFont(font);
+                panel.setComponentZOrder(newButton, Integer.parseInt(layer));
+                
+                newButton.addMouseListener(draggerForButton);
+                newButton.addMouseMotionListener(draggerForButton);
+                
+                objects.add(newButton);
             }
         }
 
@@ -313,14 +333,29 @@ public class Display extends JFrame {
                 String y = jobject.get("yposition").toString();
                 String width = jobject.get("width").toString();
                 String height = jobject.get("height").toString();
+                String layer = jobject.get("layer").toString();
 
-                JTextField tf = new JTextField(text);
-                tf.setBounds(Integer.parseInt(x), Integer.parseInt(y), Integer.parseInt(width), Integer.parseInt(height));
-                panel.add(tf);
-                tf.setFont(font);
-                objects.add(tf);
+                JTextField newtf = new JTextField(text);
+                newtf.setBounds(Integer.parseInt(x), Integer.parseInt(y), Integer.parseInt(width), Integer.parseInt(height));
+                panel.add(newtf);
+                newtf.setFont(font);
+                panel.setComponentZOrder(newtf, Integer.parseInt(layer));
+                newtf.addMouseListener(draggerForTextField);
+                newtf.addMouseMotionListener(draggerForTextField);
+                
+                objects.add(newtf);
             }
         }
+        
+    }
+    
+    private void clear(){
+    	for(int i = 0; i < objects.size(); i++){
+    		panel.remove((Component)objects.get(i));
+    	}
+    	
+    	objects.clear();
+    	panel.repaint();
     }
 
     private static String readAllBytes(String filePath) {
