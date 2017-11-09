@@ -284,7 +284,6 @@ public class Display extends JFrame {
                 newLabel.setBounds(Integer.parseInt(x), Integer.parseInt(y), Integer.parseInt(width), Integer.parseInt(height));
                 panel.add(newLabel);
                 newLabel.setFont(font);
-                panel.setComponentZOrder(newLabel, Integer.parseInt(layer));
                 
                 objects.add(newLabel);
             }
@@ -310,7 +309,6 @@ public class Display extends JFrame {
                 newButton.setBounds(Integer.parseInt(x), Integer.parseInt(y), Integer.parseInt(width), Integer.parseInt(height));
                 panel.add(newButton);
                 newButton.setFont(font);
-                panel.setComponentZOrder(newButton, Integer.parseInt(layer));
                 
                 newButton.addMouseListener(draggerForButton);
                 newButton.addMouseMotionListener(draggerForButton);
@@ -339,7 +337,6 @@ public class Display extends JFrame {
                 newtf.setBounds(Integer.parseInt(x), Integer.parseInt(y), Integer.parseInt(width), Integer.parseInt(height));
                 panel.add(newtf);
                 newtf.setFont(font);
-                panel.setComponentZOrder(newtf, Integer.parseInt(layer));
                 newtf.addMouseListener(draggerForTextField);
                 newtf.addMouseMotionListener(draggerForTextField);
                 
